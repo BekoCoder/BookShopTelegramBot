@@ -21,6 +21,7 @@ public class Books extends AbstractEntity {
     private String author;
     private String description;
     private Double price;
+    private Integer quantity;
 
 
     @OneToMany(mappedBy = "book")
