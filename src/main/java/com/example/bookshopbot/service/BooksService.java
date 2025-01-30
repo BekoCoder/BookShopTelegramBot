@@ -1,6 +1,8 @@
 package com.example.bookshopbot.service;
 
 import com.example.bookshopbot.dto.BooksDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BooksService {
     BooksDto save(BooksDto booksDto);
@@ -9,5 +11,7 @@ public interface BooksService {
 
     void delete(Long id);
 
-    BooksDto findByTitle(String title);
+    BooksDto findById(Long id);
+
+    Page<BooksDto> getAll(Pageable pageable);
 }

@@ -19,9 +19,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
         Users users = mapper.map(userDto, Users.class);
-        if (isUserExist(users.getUsername())) {
-            throw new UserNotFoundException("User already exist");
-        }
+//        if (isUserExist(users.getUsername())) {
+//            throw new UserNotFoundException("User already exist");
+//        }
        return mapper.map(userRepository.save(users), UserDto.class);
     }
 
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-    private boolean isUserExist(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
+//    private boolean isUserExist(String username) {
+//        return userRepository.findByUsername(username).isPresent();
+//    }
 }

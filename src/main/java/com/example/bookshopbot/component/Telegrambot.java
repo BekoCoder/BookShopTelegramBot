@@ -7,11 +7,11 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,11 @@ public class Telegrambot extends TelegramLongPollingBot {
                 userService.save(userDto);
                 SendMessage message = new SendMessage();
                 message.setChatId(update.getMessage().getChatId().toString());
-                message.setText("Rahmat! Muvaffaqiyatli ro'yxatdan o'tdingiz");
+                chooseLanguage(update.getMessage().getChatId().toString());
+
                 try {
                     execute(message);
+
                 } catch (TelegramApiException e) {
                     throw new RuntimeException(e);
                 }
@@ -74,7 +76,62 @@ public class Telegrambot extends TelegramLongPollingBot {
         }
     }
 
+    private void chooseLanguage(String chatId) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Tilni tanlang !!!");
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        KeyboardButton button = new KeyboardButton();
+        button.setText("O'zbekcha");
+        KeyboardButton button1 = new KeyboardButton();
+        button1.setText("Русский");
+        KeyboardButton button2 = new KeyboardButton();
+        button2.setText("English");
+        KeyboardRow row = new KeyboardRow();
+        row.add(button);
+        row.add(button1);
+        row.add(button2);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+
+//    private void chooseLanguageInline(String chatId){
+//        SendMessage message=new SendMessage();
+//        message.setChatId(chatId);
+//        message.setText("Tilni tanlang !!!");
+//        InlineKeyboardMarkup inlineKeyboardMarkup=new InlineKeyboardMarkup();
+//        InlineKeyboardButton button=new InlineKeyboardButton();
+//        InlineKeyboardButton button1=new InlineKeyboardButton();
+//        InlineKeyboardButton button2=new InlineKeyboardButton();
+//        button.setText("O'zbekcha");
+//        button.setCallbackData("uz");
+//        button1.setText("Русский");
+//        button1.setCallbackData("ru");
+//        button2.setText("English");
+//        button2.setCallbackData("en");
+//        List<List<InlineKeyboardButton>> keyboard=new ArrayList<>();
+//        List<InlineKeyboardButton> row=new ArrayList<>();
+//        row.add(button);
+//        row.add(button1);
+//        row.add(button2);
+//        keyboard.add(row);
+//        inlineKeyboardMarkup.setKeyboard(keyboard);
+//        message.setReplyMarkup(inlineKeyboardMarkup);
+//        try {
+//            execute(message);
+//        } catch (TelegramApiException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     @Override
