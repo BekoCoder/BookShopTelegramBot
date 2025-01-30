@@ -1,5 +1,6 @@
 package com.example.bookshopbot.entity;
 
+import com.example.bookshopbot.enumeration.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -28,4 +29,6 @@ public class Users extends AbstractEntity {
 
     @OneToMany(mappedBy = "user")
     private List<BoughtBooks> boughtBooks;
+
+    private UserRole role;
 }

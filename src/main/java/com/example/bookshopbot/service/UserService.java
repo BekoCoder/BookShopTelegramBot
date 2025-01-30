@@ -9,5 +9,7 @@ public interface UserService {
 
     void delete(Long id);
 
-    UserDto findByChatId(String chatId);
+    UserDto getById(Long id);
+
+    void addAdmin(String phoneNumber, Long superAdminId, String chatId);
 }
