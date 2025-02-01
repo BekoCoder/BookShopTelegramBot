@@ -8,8 +8,12 @@ import com.example.bookshopbot.repository.UserRepository;
 import com.example.bookshopbot.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,22 +28,39 @@ public class UserServiceImpl implements UserService {
 //        if (isUserExist(users.getUsername())) {
 //            throw new UserNotFoundException("User already exist");
 //        }
+        users.setRole(UserRole.USER);
        return mapper.map(userRepository.save(users), UserDto.class);
     }
 
     @Override
     public UserDto update(Long id, UserDto userDto) {
-        return null;
+        Users user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
+        if(Objects.isNull(userDto)){
+            throw new UserNotFoundException("Foydalanuvchi topilmadi");
+        }
+        user.setName(userDto.getName());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setUsername(userDto.getUsername());
+        return mapper.map(userRepository.save(user), UserDto.class);
     }
 
     @Override
     public void delete(Long id) {
-
+        Users user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
+        if(Objects.isNull(user) || user.getIsDeleted() == 1){
+            throw new UserNotFoundException("Foydalanuvchi topilmadi");
+        }
+        user.setIsDeleted(1);
+        userRepository.save(user);
     }
 
     @Override
     public UserDto getById(Long id) {
-        return null;
+        Users user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
+        if(Objects.isNull(user) || user.getIsDeleted() == 1){
+            throw new UserNotFoundException("Foydalanuvchi topilmadi");
+        }
+        return mapper.map(user, UserDto.class);
     }
 
     @Override
@@ -54,6 +75,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Page<UserDto> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(users -> mapper.map(users, UserDto.class));
+    }
 
 //    private boolean isUserExist(String username) {
 //        return userRepository.findByUsername(username).isPresent();
