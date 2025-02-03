@@ -1,9 +1,7 @@
 package com.example.bookshopbot.entity;
 
 import com.example.bookshopbot.enumeration.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +21,7 @@ public class Users extends AbstractEntity {
     private String name;
     private String username;
     private String phoneNumber;
+    private String city;
 
     @OneToMany(mappedBy = "user")
     private List<Comments> comments;
@@ -30,5 +29,6 @@ public class Users extends AbstractEntity {
     @OneToMany(mappedBy = "user")
     private List<BoughtBooks> boughtBooks;
 
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 }

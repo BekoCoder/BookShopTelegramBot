@@ -1,6 +1,7 @@
 package com.example.bookshopbot.component;
 
 import com.example.bookshopbot.dto.UserDto;
+import com.example.bookshopbot.enumeration.UserRole;
 import com.example.bookshopbot.service.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -36,7 +37,26 @@ public class Telegrambot extends TelegramLongPollingBot {
                 userService.save(userDto);
                 SendMessage message = new SendMessage();
                 message.setChatId(update.getMessage().getChatId().toString());
-                chooseLanguage(update.getMessage().getChatId().toString());
+                chooseCity(update.getMessage().getChatId().toString());
+                if(update.getMessage().hasText()){
+                    if(update.getMessage().getText().equals("Tashkent")){
+                        userDto.setCity(update.getMessage().getText());
+                    }
+                    if(update.getMessage().getText().equals("Andijan")){
+                        userDto.setCity("Andijan");
+                    }
+                    if(update.getMessage().getText().equals("Khorazm")){
+                        userDto.setCity("Khorazm");
+                    }
+                    userService.save(userDto);
+                    message.setChatId(update.getMessage().getChatId().toString());
+                }
+
+
+                if(userDto.getPhoneNumber().equals("+998940016134")){
+                    userDto.setUserRole(UserRole.SUPER_ADMIN);
+                    userService.save(userDto);
+                }
 
                 try {
                     execute(message);
@@ -76,17 +96,17 @@ public class Telegrambot extends TelegramLongPollingBot {
         }
     }
 
-    private void chooseLanguage(String chatId) {
+    private void chooseCity(String chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText("Tilni tanlang !!!");
+        sendMessage.setText("Shahringizni tanlang !!!");
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         KeyboardButton button = new KeyboardButton();
-        button.setText("O'zbekcha");
+        button.setText("Tashkent");
         KeyboardButton button1 = new KeyboardButton();
-        button1.setText("Русский");
+        button1.setText("Andijan");
         KeyboardButton button2 = new KeyboardButton();
-        button2.setText("English");
+        button2.setText("Khorazm");
         KeyboardRow row = new KeyboardRow();
         row.add(button);
         row.add(button1);
